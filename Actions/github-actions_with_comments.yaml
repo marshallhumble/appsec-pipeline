@@ -21,10 +21,10 @@ jobs:
       image: semgrep/semgrep
     if: github.actor != 'dependabot[bot]'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Cache Semgrep rules
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.cache/semgrep
           key: ${{ runner.os }}-semgrep-rules-${{ hashFiles('.semgrep/**') }}-${{ hashFiles('.github/workflows/security-scanning.yml') }}
@@ -87,7 +87,7 @@ jobs:
           fi
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: semgrep-sarif
           path: semgrep.sarif
@@ -97,7 +97,7 @@ jobs:
     name: Gosec (Go Security)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -121,7 +121,7 @@ jobs:
 
       - name: Set up Go
         if: steps.check_go.outputs.has_go == 'true'
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version: 'stable'
           cache: true
@@ -145,7 +145,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: gosec-sarif
           path: gosec.sarif
@@ -155,7 +155,7 @@ jobs:
     name: Brakeman (Rails Security)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -178,14 +178,14 @@ jobs:
 
       - name: Set up Ruby
         if: steps.check_rails.outputs.has_rails == 'true'
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
 
       - name: Cache Brakeman
         if: steps.check_rails.outputs.has_rails == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.gem
           key: ${{ runner.os }}-gems-brakeman-${{ hashFiles('**/Gemfile.lock') }}
@@ -214,7 +214,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: brakeman-sarif
           path: brakeman.sarif
@@ -224,7 +224,7 @@ jobs:
     name: Staticcheck (Go Linting)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -248,14 +248,14 @@ jobs:
 
       - name: Set up Go
         if: steps.check_go.outputs.has_go == 'true'
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version: 'stable'
           cache: true
 
       - name: Run Staticcheck
         if: steps.check_go.outputs.has_go == 'true'
-        uses: dominikh/staticcheck-action@v1
+        uses: dominikh/staticcheck-action@a59b46bc6a3ed113d90f4562922ba956f5db4d37 # v1
         with:
           version: "latest"
           install-go: false
@@ -275,7 +275,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: staticcheck-sarif
           path: staticcheck.sarif
@@ -285,7 +285,7 @@ jobs:
     name: SQLFluff
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -310,14 +310,14 @@ jobs:
 
       - name: Set up Python
         if: steps.changed_sql.outputs.has_sql == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
           # REMOVED: cache: 'pip'
 
       - name: Cache SQLFluff
         if: steps.changed_sql.outputs.has_sql == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-sqlfluff-${{ hashFiles('.github/workflows/security-scanning.yml') }}
@@ -405,7 +405,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: sqlfluff-sarif
           path: sqlfluff.sarif
@@ -415,7 +415,7 @@ jobs:
     name: TSQLLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -440,13 +440,13 @@ jobs:
 
       - name: Setup .NET
         if: steps.changed_sql.outputs.has_sql == 'true'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: '8.0.x'
 
       - name: Cache .NET tools
         if: steps.changed_sql.outputs.has_sql == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.dotnet/tools
           key: ${{ runner.os }}-dotnet-tools-tsqllint
@@ -465,7 +465,7 @@ jobs:
 
       - name: Set up Python
         if: steps.changed_sql.outputs.has_sql == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
@@ -535,7 +535,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: tsqllint-sarif
           path: tsqllint.sarif
@@ -545,7 +545,7 @@ jobs:
     name: PowerShell Analysis
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -578,7 +578,7 @@ jobs:
 
       - name: Cache PSScriptAnalyzer
         if: steps.check_ps.outputs.has_ps == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.local/share/powershell/Modules
           key: ${{ runner.os }}-psmodules-${{ hashFiles('.github/workflows/security-scanning.yml') }}
@@ -642,7 +642,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: powershell-sarif
           path: powershell.sarif
@@ -652,7 +652,7 @@ jobs:
     name: Checkov IaC
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -676,7 +676,7 @@ jobs:
 
       - name: Run Checkov
         if: steps.check_iac.outputs.has_iac == 'true'
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@05d9f3cd4807c3dea7444d4e60dc44ad57928ab5
         with:
           directory: .
           framework: all
@@ -714,7 +714,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: checkov-sarif
           path: checkov.sarif
@@ -724,10 +724,10 @@ jobs:
     name: Trivy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Run Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -738,7 +738,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: trivy-sarif
           path: trivy.sarif
@@ -748,7 +748,7 @@ jobs:
     name: TruffleHog
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -760,7 +760,7 @@ jobs:
         continue-on-error: true
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
@@ -816,7 +816,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: trufflehog-sarif
           path: trufflehog.sarif
@@ -825,7 +825,7 @@ jobs:
     name: Cargo Audit (Rust)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -849,11 +849,11 @@ jobs:
 
       - name: Install Rust toolchain
         if: steps.check_rust.outputs.has_rust == 'true'
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@631a55b12751854ce901bb631d5902ceb48146f7 # stable
 
       - name: Cache cargo registry
         if: steps.check_rust.outputs.has_rust == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             ~/.cargo/registry
@@ -964,7 +964,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cargo-audit-sarif
           path: cargo-audit.sarif
@@ -978,7 +978,7 @@ jobs:
         dotnet-version: ['8.0.x', '9.0.x', '10.0.x']
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -1002,7 +1002,7 @@ jobs:
 
       - name: Setup .NET
         if: steps.check_dotnet.outputs.has_dotnet == 'true'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
@@ -1019,7 +1019,7 @@ jobs:
 
       - name: Set up Python
         if: steps.check_dotnet.outputs.has_dotnet == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
@@ -1112,7 +1112,7 @@ jobs:
           EOF
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dotnet-vulnerable-sarif-${{ matrix.dotnet-version }}
           path: dotnet-vulnerable.sarif
@@ -1125,12 +1125,12 @@ jobs:
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download all SARIF files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           pattern: '*-sarif*'
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
 
