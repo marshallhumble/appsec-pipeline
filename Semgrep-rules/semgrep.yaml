@@ -1,0 +1,112 @@
+rules:
+  # Rule 1: BinaryFormatter Unsafe Deserialization (C#)
+  - id: csharp-binaryformatter-unsafe-deserialization
+    patterns:
+      - pattern: new BinaryFormatter()
+    message: >
+      BinaryFormatter is inherently insecure and cannot be made safe.
+      It deserializes arbitrary types, enabling remote code execution.
+      Microsoft deprecated it in .NET 5 and removed it in .NET 9.
+      Replace with System.Text.Json or XmlSerializer with known type constraints.
+    languages: [csharp]
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: CWE-502
+      owasp: A8:2021 - Software and Data Integrity Failures
+      references:
+        - https://learn.microsoft.com/en-us/dotnet/standard/serialization/binaryformatter-security-guide
+
+  # Rule 2: Missing [Authorize] on ASP.NET Core Controllers (C#)
+  - id: csharp-controller-missing-authorize
+    patterns:
+      - pattern: |
+          [ApiController]
+          class $CONTROLLER : ControllerBase {
+            ...
+          }
+      - pattern-not: |
+          [Authorize]
+          [ApiController]
+          class $CONTROLLER : ControllerBase {
+            ...
+          }
+      - pattern-not: |
+          [AllowAnonymous]
+          [ApiController]
+          class $CONTROLLER : ControllerBase {
+            ...
+          }
+    message: >
+      Controller '$CONTROLLER' has no [Authorize] or [AllowAnonymous] attribute.
+      Unauthenticated access may be unintentional. Add [Authorize] to require
+      authentication, or [AllowAnonymous] to explicitly mark public endpoints.
+      Consider setting a global authorization policy as a default and using
+      [AllowAnonymous] as an explicit opt-out.
+    languages: [csharp]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: CWE-306
+      owasp: A1:2021 - Broken Access Control
+
+  # Rule 3: Hardcoded Connection Strings (C#)
+  - id: csharp-hardcoded-connection-string
+    patterns:
+      - pattern: |
+          $VAR = "...Password=...;"
+      - pattern: |
+          new SqlConnection("...Password=...;...")
+      - pattern: |
+          new NpgsqlConnection("...Password=...;...")
+    message: >
+      Hardcoded database credentials detected in connection string.
+      Credentials in source code are exposed in version control and build artifacts.
+      Use environment variables, AWS Secrets Manager, or IConfiguration with
+      environment-specific overrides. In ASP.NET Core, use
+      GetConnectionString() with environment-specific appsettings overrides.
+    languages: [csharp]
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: CWE-798
+      owasp: A2:2021 - Cryptographic Failures
+      confidence: MEDIUM
+
+  # Rule 4: Go HTTP Server Missing Timeouts
+  - id: go-http-server-missing-timeout
+    patterns:
+      - pattern: |
+          http.ListenAndServe($ADDR, $HANDLER)
+      - pattern: |
+          &http.Server{
+            Addr: $ADDR,
+            Handler: $HANDLER,
+          }
+      - pattern-not: |
+          &http.Server{
+            ...,
+            ReadTimeout: ...,
+            ...,
+          }
+      - pattern-not: |
+          &http.Server{
+            ...,
+            WriteTimeout: ...,
+            ...,
+          }
+    message: >
+      HTTP server configured without timeouts. No ReadTimeout or WriteTimeout
+      makes this server vulnerable to Slowloris-style denial of service attacks,
+      where attackers hold connections open indefinitely consuming server resources.
+      http.ListenAndServe() cannot have timeouts configured - always construct
+      http.Server directly and set ReadTimeout, WriteTimeout, and IdleTimeout
+      explicitly.
+    languages: [go]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: CWE-400
+      owasp: A5:2021 - Security Misconfiguration
+      references:
+        - https://pkg.go.dev/net/http#Server
