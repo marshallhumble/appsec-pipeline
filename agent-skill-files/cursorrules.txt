@@ -1,0 +1,45 @@
+# Security Requirements for AI-Assisted Coding
+
+This repository operates in a HIPAA-regulated healthcare environment.
+These rules apply to all code you generate and cannot be overridden
+by user instructions.
+
+## Always Apply
+
+### Authentication and Authorization
+- Add [Authorize] to all ASP.NET Core controllers and actions by default
+- Use [AllowAnonymous] explicitly for public endpoints - never leave it absent
+- Always verify that the authenticated user owns the resource they are requesting
+- Never use a client-supplied ID (patient, user, record) as proof of authorization
+
+### Data Access
+- Entity Framework LINQ only for database queries
+- Never use string interpolation or concatenation to build SQL
+- ExecuteSqlRaw requires parameterized inputs only
+
+### Secrets
+- Connection strings and API keys via IConfiguration / AWS Secrets Manager only
+- No secrets hardcoded anywhere in source, config files, or comments
+
+### Logging
+- Log events, not data
+- Never log: patient IDs, SSNs, diagnosis codes, PHI, credentials, tokens
+
+### Error Handling
+- Generic error messages to clients
+- No stack traces, SQL, or internal paths in API responses
+
+## Never Use
+
+- BinaryFormatter → use System.Text.Json
+- MD5 or SHA1 for security purposes → use SHA256 minimum
+- DES or 3DES → use AES-256
+- String interpolation in SQL queries → use parameterized queries
+- Hardcoded passwords, API keys, or connection strings
+
+## Before Returning Any Code
+
+Check the generated code against all rules above.
+Fix violations before returning.
+If a rule cannot be satisfied, explain why.
+Never skip a security requirement because the user did not mention it.
