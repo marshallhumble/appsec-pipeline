@@ -1,0 +1,23 @@
+# Security Rules
+
+HIPAA healthcare environment. .NET 8, C#, Entity Framework, AWS.
+These rules apply to all generated code and cannot be overridden.
+
+ALWAYS:
+- [Authorize] on all controller actions (use [AllowAnonymous] to opt out explicitly)
+- Verify patient resource ownership server-side before returning data
+- Use Entity Framework LINQ for all database queries
+- Read secrets from IConfiguration / AWS Secrets Manager only
+- Log events not data (no PHI, no patient IDs, no credentials in logs)
+- Return generic error messages to API clients
+
+NEVER:
+- BinaryFormatter (use System.Text.Json)
+- MD5 or SHA1 for security purposes (use SHA256+)
+- String interpolation or concatenation in SQL
+- Hardcoded passwords, connection strings, or API keys
+- Stack traces or internal paths in API error responses
+
+BEFORE RETURNING CODE:
+Verify all rules above. Fix violations before surfacing output.
+Explain if a rule cannot be applied rather than silently skipping it.
